@@ -6,11 +6,17 @@ import (
 	"github.com/dan-santos/go-user/src/configs/logger"
 	"github.com/dan-santos/go-user/src/configs/validation"
 	"github.com/dan-santos/go-user/src/controller/dto"
+	"github.com/dan-santos/go-user/src/model"
+	"github.com/dan-santos/go-user/src/view"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
-func Create(c *gin.Context) {
+var (
+	UserDomainInterface model.UserDomainInterface
+)
+
+func (uc *userControllerInterface) Create(c *gin.Context) {
 	var userRequest dto.UserRequest
 
 	if err := c.ShouldBindJSON(&userRequest); err != nil {
@@ -21,13 +27,18 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	response := dto.UserResponse{
-		ID: "test",
-		Email: userRequest.Email,
-		Name: userRequest.Name,
-		Age: userRequest.Age,
+	domain := model.NewUserDomain(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+
+	data, err := uc.service.Create(domain); if err != nil {
+		c.JSON(err.Code, err)
+		return
 	}
 
 	logger.Info("User created successfully")
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusCreated, view.UserPresenter(data))
 }
