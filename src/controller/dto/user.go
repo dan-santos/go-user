@@ -7,6 +7,11 @@ type UserRequest struct {
 	Age int8 `json:"age" binding:"required,min=1,max=100"`
 }
 
+type UserUpdateRequest struct {
+	Name string `json:"name" binding:"omitempty,min=3,max=50"`
+	Age int8 `json:"age" binding:"omitempty,min=1,max=100"`
+}
+
 type UserResponse struct {
 	ID string `json:"id"`
 	Email string `json:"email"`

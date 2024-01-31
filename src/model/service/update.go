@@ -5,10 +5,13 @@ import (
 	"github.com/dan-santos/go-user/src/model"
 )
 
-func (user *userDomainService) Update(
-		userId string, 
+func (user *userDomainService) UpdateService(
+		id string, 
 		userDomain model.UserDomainInterface,
 	) (*resterrors.RestErr) {
-	
+	err := user.userRepository.UpdateUser(id, userDomain)
+	if err != nil {
+		return err
+	}
 	return nil
 }

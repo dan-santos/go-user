@@ -32,4 +32,9 @@ type UserRepository interface {
 	FindUserByEmail(
 		email string,
 	) (model.UserDomainInterface, *resterrors.RestErr)
+
+	UpdateUser(
+		id string,
+		userDomain model.UserDomainInterface,
+	) *resterrors.RestErr
 }
