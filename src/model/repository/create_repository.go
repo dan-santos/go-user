@@ -11,12 +11,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-var COLLECTION_NAME = os.Getenv("COLLECTION_NAME")
-
 func (ur *userRepository) CreateUser(
 	userDomain model.UserDomainInterface,
 ) (model.UserDomainInterface, *resterrors.RestErr) {
-	collection := ur.databaseConnection.Collection(COLLECTION_NAME)
+	collection_name := os.Getenv(COLLECTION_NAME)
+	collection := ur.databaseConnection.Collection(collection_name)
 
 	document := entity.ToDatabase(userDomain)
 	result, err := collection.InsertOne(context.Background(), document)

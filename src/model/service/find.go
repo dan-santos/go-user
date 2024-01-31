@@ -5,9 +5,15 @@ import (
 	"github.com/dan-santos/go-user/src/model"
 )
 
-func (user *userDomainService) Find(string) (
-	*model.UserDomainInterface, *resterrors.RestErr,
+func (user *userDomainService) FindByIdService(id string) (
+	model.UserDomainInterface, *resterrors.RestErr,
+) {
+	return user.userRepository.FindUserById(id)
+}
+
+func (user *userDomainService) FindByEmailService(email string) (
+	model.UserDomainInterface, *resterrors.RestErr,
 ) {
 	
-	return nil, nil
+	return user.userRepository.FindUserByEmail(email)
 }

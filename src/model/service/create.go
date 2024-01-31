@@ -5,7 +5,7 @@ import (
 	"github.com/dan-santos/go-user/src/model"
 )
 
-func (user *userDomainService) Create(
+func (user *userDomainService) CreateService(
 	userDomain model.UserDomainInterface,
 ) (model.UserDomainInterface, *resterrors.RestErr) {
 	userDomain.EncryptPassword()
