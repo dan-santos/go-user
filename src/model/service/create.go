@@ -8,6 +8,13 @@ import (
 func (user *userDomainService) CreateService(
 	userDomain model.UserDomainInterface,
 ) (model.UserDomainInterface, *resterrors.RestErr) {
+
+
+	userAlreadyExists, _ := user.FindByEmailService(userDomain.GetEmail())
+	if userAlreadyExists != nil {
+		return nil, resterrors.NewBadRequestError("User with same email already exists")
+	}
+
 	userDomain.EncryptPassword()
 
 	userDomainRepository, err := user.userRepository.CreateUser(userDomain)
