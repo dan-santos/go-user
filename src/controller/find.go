@@ -5,20 +5,12 @@ import (
 	"net/mail"
 
 	resterrors "github.com/dan-santos/go-user/src/configs/rest_errors"
-	"github.com/dan-santos/go-user/src/model"
 	"github.com/dan-santos/go-user/src/view"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func (uc *userControllerInterface) FindUserById(c *gin.Context) {
-
-	_, err := model.VerifyToken(c.Request.Header.Get("Authorization"))
-	if err != nil {
-		c.JSON(err.Code, err)
-		return
-	}
-
 	userId := c.Param("userId")
 
 	if _, err := primitive.ObjectIDFromHex(userId); err != nil {
@@ -37,13 +29,6 @@ func (uc *userControllerInterface) FindUserById(c *gin.Context) {
 }
 
 func (uc *userControllerInterface) FindUserByEmail(c *gin.Context) {
-
-	_, err := model.VerifyToken(c.Request.Header.Get("Authorization"))
-	if err != nil {
-		c.JSON(err.Code, err)
-		return
-	}
-	
 	userEmail := c.Param("userEmail")
 
 	if _, err := mail.ParseAddress(userEmail); err != nil {

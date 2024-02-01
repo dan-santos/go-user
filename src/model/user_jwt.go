@@ -7,6 +7,7 @@ import (
 	"time"
 
 	resterrors "github.com/dan-santos/go-user/src/configs/rest_errors"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
 )
 
@@ -71,4 +72,32 @@ func VerifyToken(tokenValue string) (UserDomainInterface, *resterrors.RestErr) {
 		name: claims["name"].(string),
 		age: int8(claims["age"].(float64)),
 	}, nil
+}
+
+func VerifyTokenMiddleware(c *gin.Context) {
+	secret := os.Getenv(JWT_SECRET)
+	tokenValue := RemoveBearerPrefix(c.Request.Header.Get("Authorization"))
+
+	token, err := jwt.Parse(RemoveBearerPrefix(tokenValue), func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); ok {
+			return []byte(secret), nil
+		}
+
+		return nil, resterrors.NewBadRequestError("Invalid token")
+	})
+
+	if err != nil {
+		errRest := resterrors.NewUnauthorizedError("Invalid token")
+		c.JSON(errRest.Code, errRest)
+		c.Abort()
+		return
+	}
+
+	_, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		errRest := resterrors.NewUnauthorizedError("Invalid token")
+		c.JSON(errRest.Code, errRest)
+		c.Abort()
+		return
+	}
 }
