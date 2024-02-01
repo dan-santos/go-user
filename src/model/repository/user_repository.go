@@ -37,4 +37,8 @@ type UserRepository interface {
 		id string,
 		userDomain model.UserDomainInterface,
 	) *resterrors.RestErr
+
+	DeleteUser(
+		id string,
+	) *resterrors.RestErr
 }
