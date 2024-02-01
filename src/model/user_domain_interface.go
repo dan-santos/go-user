@@ -1,5 +1,7 @@
 package model
 
+import resterrors "github.com/dan-santos/go-user/src/configs/rest_errors"
+
 type UserDomainInterface interface {
 	GetEmail() string
 	GetPassword() string
@@ -10,6 +12,7 @@ type UserDomainInterface interface {
 	SetID(string)
 
 	EncryptPassword()
+	GenerateToken() (string, *resterrors.RestErr)
 }
 
 func NewUserDomain(

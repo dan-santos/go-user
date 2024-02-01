@@ -28,11 +28,12 @@ func (uc *userControllerInterface) Login(c *gin.Context) {
 		userRequest.Password,
 	)
 
-	data, err := uc.service.LoginService(domain); if err != nil {
+	data, token, err := uc.service.LoginService(domain); if err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
 
 	logger.Info("User logged successfully")
+	c.Header("Authorization", token)
 	c.JSON(http.StatusCreated, view.UserPresenter(data))
 }

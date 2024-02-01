@@ -7,15 +7,20 @@ import (
 
 func (user *userDomainService) LoginService(
 	userDomain model.UserDomainInterface,
-) (model.UserDomainInterface, *resterrors.RestErr) {
+) (model.UserDomainInterface, string, *resterrors.RestErr) {
 
 	userDomain.EncryptPassword()
 
 	userDB, err := user.findByEmailAndPasswordService(userDomain.GetEmail(), userDomain.GetPassword())
 	if err != nil {
-		return nil, err
+		return nil, "", err
+	}
+
+	token, err := userDB.GenerateToken()
+	if err != nil {
+		return nil, "", err
 	}
 
 	
-	return userDB, nil
+	return userDB, token, nil
 }
