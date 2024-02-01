@@ -14,4 +14,6 @@ func InitRoutes(
 	r.POST("/users", controller.Create)
 	r.PUT("/users/:userId", controller.Update)
 	r.DELETE("/users/:userId", controller.Delete)
+
+	r.POST("/login", controller.Login)
 }

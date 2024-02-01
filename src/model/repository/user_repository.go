@@ -33,6 +33,10 @@ type UserRepository interface {
 		email string,
 	) (model.UserDomainInterface, *resterrors.RestErr)
 
+	FindUserByEmailAndPassword(
+		email, password string,
+	) (model.UserDomainInterface, *resterrors.RestErr)
+
 	UpdateUser(
 		id string,
 		userDomain model.UserDomainInterface,

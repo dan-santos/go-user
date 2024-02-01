@@ -40,6 +40,31 @@ func (ur *userRepository) FindUserByEmail(
 	return entity.ToDomain(*userEntity), nil
 }
 
+func (ur *userRepository) FindUserByEmailAndPassword(
+	email, password string,
+) (model.UserDomainInterface, *resterrors.RestErr) {
+	collection_name := os.Getenv(COLLECTION_NAME)
+	collection := ur.databaseConnection.Collection(collection_name)
+
+	userEntity := &entity.UserEntity{}
+
+	filter := bson.D{{Key: "email", Value: email}, {Key: "password", Value: password}}
+	err := collection.FindOne(
+		context.Background(),
+		filter,
+	).Decode(userEntity)
+
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			errorMessage := fmt.Sprintf("Wrong email or password")
+			return nil, resterrors.NewUnauthorizedError(errorMessage)
+		}
+		errorMessage := "Error trying to find user by email"
+		return nil, resterrors.NewInternalServerError(errorMessage)
+	}
+	return entity.ToDomain(*userEntity), nil
+}
+
 func (ur *userRepository) FindUserById(
 	id string,
 ) (model.UserDomainInterface, *resterrors.RestErr) {

@@ -17,3 +17,10 @@ func (user *userDomainService) FindByEmailService(email string) (
 	
 	return user.userRepository.FindUserByEmail(email)
 }
+
+func (user *userDomainService) findByEmailAndPasswordService(email, password string) (
+	model.UserDomainInterface, *resterrors.RestErr,
+) {
+	
+	return user.userRepository.FindUserByEmailAndPassword(email, password)
+}
